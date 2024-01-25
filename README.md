@@ -1,5 +1,9 @@
 # edu-frontend-auth
 
+# Base Code
+
+See: [edu-auth-token-based](https://github.com/miwashi-edu/edu-auth-token-based)
+
 # 1. Session Storage
 
 > Frontend: Use sessionStorage.setItem('access_token', result.token) and sessionStorage.removeItem('access_token') for setting and clearing the JWT.
