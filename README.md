@@ -18,6 +18,14 @@ sessionStorage.removeItem('access_token');
 // In fetchData
 const token = sessionStorage.getItem('access_token');
 ```
+## Vulnerabilities: 
+
+Vulnerable to Cross-Site Scripting (XSS) attacks. If an attacker can inject malicious scripts into your web application, they can access session storage and steal the JWT.
+
+### Cross-tab/session limitations: 
+
+Data stored in session storage is accessible only in the tab where it was created and is cleared when the tab is closed, limiting its use in multi-tab applications.
+
 # 2. Local Storage (as is)
 
 > Frontend: Use localStorage.setItem('access_token', result.token) and localStorage.removeItem('access_token').
@@ -34,6 +42,15 @@ localStorage.removeItem('access_token');
 // In fetchData
 const token = localStorage.getItem('access_token');
 ```
+
+## Vulnerabilities:
+
+Similar to session storage, local storage is susceptible to XSS attacks. Malicious scripts can access local storage and extract the JWT.
+
+## Persistence beyond session: 
+
+Unlike session storage, local storage persists across browser sessions until explicitly cleared, which could be a risk if the user forgets to log out or the token is not managed properly.
+
 # 3. Cookie
 
 > Frontend: Instead of storing the token in local storage, send credentials using credentials: 'include' in the fetch API and expect the server to set a cookie.
@@ -60,11 +77,28 @@ fetch('http://localhost:3002/data/users', {
   // ... other settings
 });
 ```
+
+## Vulnerabilities
+
+Susceptible to Cross-Site Request Forgery (CSRF) attacks unless additional protections (like CSRF tokens) are implemented.  
+
+If not configured with the HttpOnly flag, cookies are also vulnerable to XSS attacks.  
+
+### Cross-origin restrictions: 
+
+Cookies have limitations when dealing with cross-origin requests and require proper CORS configuration.
+
 # 4. HTTP-only Cookie
 Similar to the regular cookie method, but ensure the backend sets the HTTP-only flag.
 
 The frontend code remains the same as in the cookie example. Ensure your backend sets the httpOnly flag on the cookie.
 
+## Vulnerabilities
+Reduces the risk of XSS attacks since HTTP-only cookies are not accessible via JavaScript.  
+Still vulnerable to CSRF attacks unless additional protections are implemented.
+
+### Same cross-origin restrictions as regular cookies.
+  
 # 5. Bearer Token in Authorization Header
 
 > Same as the regular cookie method, but set the cookie with the httpOnly flag (res.cookie('token', token, { httpOnly: true })).
@@ -82,6 +116,17 @@ fetch('http://localhost:3002/data/users', {
   }
 });
 ```
+
+### Vulnerabilities
+
+If the token is stored in memory (e.g., React state), it reduces the risk of XSS attacks compared to local or session storage. However, it's still susceptible if an XSS attack can manipulate application state.
+
+Vulnerable to CSRF attacks if not properly handled.
+
+### Phishing risks: 
+
+Users might be tricked into obtaining the token through social engineering or phishing attacks.
+
 # 6. IndexedDB
 
 > Frontend: Use IndexedDB API to store the JWT. This is more complex but useful for large amounts of data and provides asynchronous access.
@@ -102,6 +147,14 @@ indexedDBUtility.getToken().then(token => {
   // ... rest of your fetchData code
 });
 ```
+
+## Vulnerabilities
+Similar to local and session storage, IndexedDB is susceptible to XSS attacks. If a malicious script accesses the IndexedDB, it can compromise the JWT.
+
+### Complexity and performance considerations: 
+
+IndexedDB is more complex to implement and manage, and performance might be an issue for large-scale applications.
+
 > Remember, for all methods involving cookies (standard and HTTP-only), your backend must be set up to handle setting and clearing cookies. Similarly, using the Authorization header or IndexedDB will require corresponding backend support for token validation.
 > 
 
