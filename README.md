@@ -26,9 +26,9 @@ const token = sessionStorage.getItem('access_token');
 
 Vulnerable to Cross-Site Scripting (XSS) attacks. If an attacker can inject malicious scripts into your web application, they can access session storage and steal the JWT.
 
-### Cross-tab/session limitations: 
+## Limitations: 
 
-Data stored in session storage is accessible only in the tab where it was created and is cleared when the tab is closed, limiting its use in multi-tab applications.
+Cross-tab/session limitations: Data stored in session storage is accessible only in the tab where it was created and is cleared when the tab is closed, limiting its use in multi-tab applications.
 
 # 2. Local Storage (as is)
 
@@ -51,9 +51,9 @@ const token = localStorage.getItem('access_token');
 
 Similar to session storage, local storage is susceptible to XSS attacks. Malicious scripts can access local storage and extract the JWT.
 
-## Persistence beyond session: 
+## Limitations:
 
-Unlike session storage, local storage persists across browser sessions until explicitly cleared, which could be a risk if the user forgets to log out or the token is not managed properly.
+Persistence beyond session: Unlike session storage, local storage persists across browser sessions until explicitly cleared, which could be a risk if the user forgets to log out or the token is not managed properly.
 
 # 3. Cookie
 
@@ -88,9 +88,9 @@ Susceptible to Cross-Site Request Forgery (CSRF) attacks unless additional prote
 
 If not configured with the HttpOnly flag, cookies are also vulnerable to XSS attacks.  
 
-### Cross-origin restrictions: 
+## Limitations:  
 
-Cookies have limitations when dealing with cross-origin requests and require proper CORS configuration.
+Cross-origin restrictions: Cookies have limitations when dealing with cross-origin requests and require proper CORS configuration.
 
 # 4. HTTP-only Cookie
 Similar to the regular cookie method, but ensure the backend sets the HTTP-only flag.
@@ -101,7 +101,9 @@ The frontend code remains the same as in the cookie example. Ensure your backend
 Reduces the risk of XSS attacks since HTTP-only cookies are not accessible via JavaScript.  
 Still vulnerable to CSRF attacks unless additional protections are implemented.
 
-### Same cross-origin restrictions as regular cookies.
+## Limitations:
+
+Same cross-origin restrictions as regular cookies.
   
 # 5. Bearer Token in Authorization Header
 
@@ -127,9 +129,7 @@ If the token is stored in memory (e.g., React state), it reduces the risk of XSS
 
 Vulnerable to CSRF attacks if not properly handled.
 
-### Phishing risks: 
-
-Users might be tricked into obtaining the token through social engineering or phishing attacks.
+Phishing risks:  Users might be tricked into obtaining the token through social engineering or phishing attacks.
 
 # 6. IndexedDB
 
@@ -155,9 +155,9 @@ indexedDBUtility.getToken().then(token => {
 ## Vulnerabilities
 Similar to local and session storage, IndexedDB is susceptible to XSS attacks. If a malicious script accesses the IndexedDB, it can compromise the JWT.
 
-### Complexity and performance considerations: 
+## Limitations:  
 
-IndexedDB is more complex to implement and manage, and performance might be an issue for large-scale applications.
+Complexity and performance considerations: IndexedDB is more complex to implement and manage, and performance might be an issue for large-scale applications.
 
 > Remember, for all methods involving cookies (standard and HTTP-only), your backend must be set up to handle setting and clearing cookies. Similarly, using the Authorization header or IndexedDB will require corresponding backend support for token validation.
 > 
